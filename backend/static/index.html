@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAZORAI — Autonomous Financial Intelligence & Agentic Commerce Platform</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            },
+            razor: {
+              blue: '#0c2340',
+              accent: '#3395ff',
+              glow: '#00dc82',
+              card: '#0f172a',
+              border: '#1e293b',
+              surface: '#090d16'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#070b12] text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-slate-800/80 bg-[#090e17]/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-[1700px] mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="h-9 w-9 rounded-lg bg-gradient-to-tr from-brand-600 to-razor-accent flex items-center justify-center shadow-lg shadow-brand-500/20">
+          <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-indigo-200 to-razor-accent bg-clip-text text-transparent">RAZORAI</span>
+            <span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30">Vulcan Core v2.4</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Autonomous Financial Intelligence & Agentic Commerce Platform</p>
+        </div>
+      </div>
+
+      <!-- Live Stream Status & Health Indicators -->
+      <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-3 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-lg text-xs">
+          <div class="flex items-center space-x-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="text-slate-300 font-mono text-[11px]" id="stream-status">STREAM: LIVE</span>
+          </div>
+          <span class="text-slate-700">|</span>
+          <div class="flex items-center space-x-1 text-slate-300">
+            <i data-lucide="cpu" class="w-3.5 h-3.5 text-brand-400"></i>
+            <span class="font-mono text-[11px]">FOUNDATION AI: ACTIVE</span>
+          </div>
+          <span class="text-slate-700">|</span>
+          <div class="flex items-center space-x-1 text-slate-300">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span class="font-mono text-[11px]">GUARDRAILS: 100% HARDENED</span>
+          </div>
+        </div>
+
+        <button onclick="runStreamingBenchmark()" class="flex items-center space-x-1.5 bg-brand-600/20 hover:bg-brand-600/30 text-brand-300 border border-brand-500/30 text-xs px-3 py-1.5 rounded-lg transition">
+          <i data-lucide="gauge" class="w-3.5 h-3.5"></i>
+          <span>1,000 Tx/s Benchmark</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- GLOBAL TELEMETRY BAR -->
+    <div class="border-t border-slate-800/60 bg-slate-950/70 px-4 lg:px-6 py-2">
+      <div class="max-w-[1700px] mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 text-xs">
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Total Volume (GMV)</span>
+          <span class="text-sm font-bold text-white font-mono" id="kpi-gmv">₹1,24,50,000</span>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Success Rate</span>
+          <span class="text-sm font-bold text-emerald-400 font-mono" id="kpi-success-rate">91.4%</span>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Revenue Recovered</span>
+          <span class="text-sm font-bold text-indigo-300 font-mono" id="kpi-recovered">₹18.42 Lakhs</span>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Fraud Prevented</span>
+          <span class="text-sm font-bold text-emerald-300 font-mono" id="kpi-fraud-prevented">₹7.20 Lakhs</span>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Risk Exposure</span>
+          <span class="text-sm font-bold text-amber-400 font-mono" id="kpi-risk-exposure">₹1.45 Lakhs</span>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Discrepancies</span>
+          <span class="text-sm font-bold text-rose-400 font-mono" id="kpi-discrepancies">3 Batches (₹1.8L)</span>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-md p-2 flex flex-col">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Autonomous Actions</span>
+          <span class="text-sm font-bold text-cyan-300 font-mono" id="kpi-actions">1,248 Auto / 93 Esc</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="border-b border-slate-800 bg-[#080d15] sticky top-[110px] z-40">
+    <div class="max-w-[1700px] mx-auto px-4 lg:px-6 flex space-x-1 overflow-x-auto py-2 scrollbar-none">
+      <button onclick="switchTab('command')" id="tab-btn-command" class="tab-btn active px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+        <span>Command Center</span>
+      </button>
+      <button onclick="switchTab('agents')" id="tab-btn-agents" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+        <span>Multi-Agent Operations</span>
+      </button>
+      <button onclick="switchTab('graph')" id="tab-btn-graph" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="network" class="w-3.5 h-3.5"></i>
+        <span>Knowledge Graph</span>
+      </button>
+      <button onclick="switchTab('recovery')" id="tab-btn-recovery" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+        <span>Recovery & Bandit</span>
+      </button>
+      <button onclick="switchTab('growth')" id="tab-btn-growth" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+        <span>Merchant Digital Twin</span>
+      </button>
+      <button onclick="switchTab('finance')" id="tab-btn-finance" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="landmark" class="w-3.5 h-3.5"></i>
+        <span>Finance Reconciler</span>
+      </button>
+      <button onclick="switchTab('security')" id="tab-btn-security" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+        <span>Decision Ledger & Red-Team</span>
+      </button>
+      <button onclick="switchTab('commerce')" id="tab-btn-commerce" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+        <span>Agentic Commerce</span>
+      </button>
+      <button onclick="switchTab('mlops')" id="tab-btn-mlops" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-2 border transition">
+        <i data-lucide="flask-conical" class="w-3.5 h-3.5"></i>
+        <span>Research Experiments & MLOps</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto p-4 lg:p-6 space-y-6">
+
+    <!-- ==================== TAB 1: NATURAL LANGUAGE FINANCIAL COMMAND CENTER ==================== -->
+    <section id="tab-command" class="tab-content block space-y-6">
+      <!-- Showcase Prompt Hero -->
+      <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-xl p-5 shadow-2xl relative overflow-hidden">
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-semibold text-white flex items-center space-x-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-brand-400"></i>
+                <span>Autonomous Natural Language Command Center</span>
+              </h2>
+              <p class="text-xs text-slate-400">Ask the Multi-Agent System to investigate payment anomalies, execute recoveries, or audit settlements.</p>
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono">
+              LLM Orchestrator: <span class="text-emerald-400">LangGraph Multi-Agent DAG</span>
+            </div>
+          </div>
+
+          <!-- Prompt Input Bar -->
+          <form id="command-form" onsubmit="handleCommandSubmit(event)" class="relative flex items-center">
+            <input 
+              type="text" 
+              id="command-input" 
+              placeholder="e.g. Investigate today's payment anomalies and recover all low-risk failed transactions where expected recovery value exceeds ₹10,000."
+              class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3.5 pr-32 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-inner font-sans"
+              value="Investigate today's payment anomalies and recover all low-risk failed transactions where expected recovery value exceeds ₹10,000."
+            />
+            <button 
+              type="submit" 
+              id="command-submit-btn" 
+              class="absolute right-2 px-4 py-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center space-x-1.5 shadow-lg shadow-brand-500/20 transition"
+            >
+              <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+              <span>Execute DAG</span>
+            </button>
+          </form>
+
+          <!-- Quick Prompts Chips -->
+          <div class="flex flex-wrap gap-2 items-center text-xs">
+            <span class="text-slate-400 text-[11px]">Try Quick Scenarios:</span>
+            <button onclick="setPrompt(this.innerText)" class="px-2.5 py-1 bg-slate-800/80 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-700/50 text-[11px] transition">
+              Investigate today's payment anomalies and recover all low-risk failed transactions where expected recovery value exceeds ₹10,000.
+            </button>
+            <button onclick="setPrompt(this.innerText)" class="px-2.5 py-1 bg-slate-800/80 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-700/50 text-[11px] transition">
+              Scan Payment Knowledge Graph for fraud syndicate clusters sharing devices across merchants.
+            </button>
+            <button onclick="setPrompt(this.innerText)" class="px-2.5 py-1 bg-slate-800/80 hover:bg-slate-800 text-slate-300 rounded-md border border-slate-700/50 text-[11px] transition">
+              Reconcile yesterday's settlement batches and pinpoint unexplained bank payout variances.
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Execution Trace & Results Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Agent Thought Chain & Stepper (Left 7 Cols) -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="workflow" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-sm font-semibold text-white">Live Multi-Agent Execution Graph</h3>
+            </div>
+            <span id="agent-exec-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">READY</span>
+          </div>
+
+          <div id="agent-trace-container" class="space-y-3 max-h-[520px] overflow-y-auto pr-1">
+            <div class="p-8 text-center text-slate-500 text-xs">
+              <i data-lucide="cpu" class="w-8 h-8 mx-auto mb-2 text-slate-600 animate-pulse"></i>
+              Click "Execute DAG" above to trigger real-time multi-agent reasoning, risk scoring, counterfactual recovery, and ledger logging.
+            </div>
+          </div>
+        </div>
+
+        <!-- Executive Synthesized Report (Right 5 Cols) -->
+        <div class="lg:col-span-5 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-400"></i>
+                <h3 class="text-sm font-semibold text-white">Executive Operational Report</h3>
+              </div>
+              <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">100% Policy Verified</span>
+            </div>
+
+            <div id="executive-report-box" class="text-xs text-slate-300 leading-relaxed space-y-3 font-sans">
+              <p class="text-slate-500 italic">No workflow executed yet. Submit a command to generate an operational report.</p>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Ribbon inside Box -->
+          <div id="report-metrics-grid" class="grid grid-cols-2 gap-2 pt-4 border-t border-slate-800/80 text-[11px] font-mono">
+            <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
+              <span class="text-slate-400 block text-[10px]">Recovered:</span>
+              <span class="text-emerald-400 font-bold text-sm" id="exec-recovered-val">₹0.00</span>
+            </div>
+            <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
+              <span class="text-slate-400 block text-[10px]">High-Risk Isolated:</span>
+              <span class="text-rose-400 font-bold text-sm" id="exec-risk-val">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: MULTI-AGENT OPERATIONS ROOM ==================== -->
+    <section id="tab-agents" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="agent-cards-grid">
+        <!-- Dynamic Cards rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: PAYMENT KNOWLEDGE GRAPH & SYNDICATES ==================== -->
+    <section id="tab-graph" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Visual Graph Canvas (8 Cols) -->
+        <div class="lg:col-span-8 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="network" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-sm font-semibold text-white">Payment Knowledge Graph & Syndicate Topology</h3>
+            </div>
+            <div class="flex items-center space-x-3 text-[11px]">
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span><span>Customer</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span><span>Device</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span><span>Card</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span><span>Merchant</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span><span>Syndicate Cluster</span></span>
+            </div>
+          </div>
+          <div id="graph-canvas-container" class="w-full h-[480px] bg-slate-950 rounded-lg border border-slate-800/80 relative flex items-center justify-center overflow-hidden">
+            <canvas id="kg-canvas" class="w-full h-full"></canvas>
+          </div>
+        </div>
+
+        <!-- Syndicate Rings & Node Inspector (4 Cols) -->
+        <div class="lg:col-span-4 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
+              <h3 class="text-sm font-semibold text-white">Detected Fraud Syndicates</h3>
+            </div>
+          </div>
+          <div id="syndicates-list" class="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: REVENUE RECOVERY 2.0 & CONTEXTUAL BANDIT ==================== -->
+    <section id="tab-recovery" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Failed Transactions Table (7 Cols) -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400"></i>
+              <h3 class="text-sm font-semibold text-white">Failed Payment Candidates</h3>
+            </div>
+            <span class="text-xs text-slate-400">Click a row to simulate counterfactual recovery</span>
+          </div>
+          <div class="overflow-x-auto max-h-[460px] overflow-y-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 bg-slate-950/80 sticky top-0 border-b border-slate-800 font-mono text-[11px]">
+                <tr>
+                  <th class="p-2.5">TX ID</th>
+                  <th class="p-2.5">Amount</th>
+                  <th class="p-2.5">Method</th>
+                  <th class="p-2.5">Reason</th>
+                  <th class="p-2.5">Risk Score</th>
+                  <th class="p-2.5">Action</th>
+                </tr>
+              </thead>
+              <tbody id="failed-tx-table-body" class="divide-y divide-slate-800/60 font-mono">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Counterfactual Action Simulator & LinUCB (5 Cols) -->
+        <div class="lg:col-span-5 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="calculator" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-sm font-semibold text-white">Counterfactual Simulation & Bandit</h3>
+            </div>
+            <span class="text-[10px] font-mono text-brand-300 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">LinUCB Policy</span>
+          </div>
+
+          <div id="counterfactual-details-box" class="space-y-3">
+            <p class="text-xs text-slate-500 text-center py-10">Select a failed payment transaction on the left to run counterfactual action simulations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: MERCHANT DIGITAL TWIN & GROWTH SIMULATOR ==================== -->
+    <section id="tab-growth" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-base font-semibold text-white flex items-center space-x-2">
+              <i data-lucide="cpu" class="w-4 h-4 text-brand-400"></i>
+              <span>Merchant Digital Twin Simulation Studio</span>
+            </h3>
+            <p class="text-xs text-slate-400">Simulate what-if optimizations on GMV, checkout friction, and multi-rail routing.</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <label class="text-xs text-slate-400">Select Merchant Twin:</label>
+            <select id="merchant-twin-select" onchange="runMerchantSimulation()" class="bg-slate-950 border border-slate-700 text-xs rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-brand-500">
+              <option value="merch_0001">QuickKart India (merch_0001)</option>
+              <option value="merch_0002">Apex Cloud Solutions (merch_0002)</option>
+              <option value="merch_0003">EduPro Global (merch_0003)</option>
+              <option value="merch_0004">VibeGaming Studio (merch_0004)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Simulation Controls & Projected Output Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Controls (5 Cols) -->
+          <div class="lg:col-span-5 bg-slate-950 p-5 rounded-lg border border-slate-800/80 space-y-5">
+            <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Intervention Levers</h4>
+            
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 bg-slate-900/60 rounded border border-slate-800">
+                <div>
+                  <span class="text-xs font-medium text-white block">AI Smart Retry Engine</span>
+                  <span class="text-[11px] text-slate-400">Auto-retries transient bank timeouts</span>
+                </div>
+                <input type="checkbox" id="sim-smart-retry" checked onchange="runMerchantSimulation()" class="w-4 h-4 accent-brand-500 rounded cursor-pointer">
+              </div>
+
+              <div class="flex items-center justify-between p-3 bg-slate-900/60 rounded border border-slate-800">
+                <div>
+                  <span class="text-xs font-medium text-white block">1-Click UPI & Credit EMI Rails</span>
+                  <span class="text-[11px] text-slate-400">Affordability rails for high-ticket</span>
+                </div>
+                <input type="checkbox" id="sim-emi-rails" checked onchange="runMerchantSimulation()" class="w-4 h-4 accent-brand-500 rounded cursor-pointer">
+              </div>
+
+              <div class="p-3 bg-slate-900/60 rounded border border-slate-800 space-y-2">
+                <div class="flex justify-between text-xs">
+                  <span class="font-medium text-white">Checkout Friction Reduction</span>
+                  <span class="text-brand-400 font-mono" id="friction-slider-val">15%</span>
+                </div>
+                <input type="range" id="sim-friction-slider" min="0" max="30" value="15" oninput="document.getElementById('friction-slider-val').innerText = this.value + '%'; runMerchantSimulation();" class="w-full accent-brand-500 cursor-pointer">
+                <span class="text-[10px] text-slate-500 block">Simulates 1-click address prefill & faster biometric authorization.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projected Outcome & Recommendations (7 Cols) -->
+          <div class="lg:col-span-7 bg-slate-950 p-5 rounded-lg border border-slate-800/80 space-y-5" id="twin-simulation-results">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 6: AUTONOMOUS FINANCE RECONCILER ==================== -->
+    <section id="tab-finance" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Settlement Batches (5 Cols) -->
+        <div class="lg:col-span-5 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="landmark" class="w-4 h-4 text-brand-400"></i>
+              <h3 class="text-sm font-semibold text-white">Settlement Payout Batches</h3>
+            </div>
+          </div>
+          <div id="settlements-list-container" class="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Waterfall Variance Breakdown (7 Cols) -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="split" class="w-4 h-4 text-rose-400"></i>
+              <h3 class="text-sm font-semibold text-white">Financial Forensic Discrepancy Waterfall</h3>
+            </div>
+            <span class="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">Audit Dossier</span>
+          </div>
+
+          <div id="finance-waterfall-container" class="space-y-4">
+            <p class="text-xs text-slate-500 text-center py-12">Select a settlement discrepancy batch on the left to inspect the forensic deconstruction waterfall.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 7: DECISION LEDGER & RED-TEAM SECURITY LAB ==================== -->
+    <section id="tab-security" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Immutable Decision Ledger (7 Cols) -->
+        <div class="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+              <h3 class="text-sm font-semibold text-white">Immutable AI Decision Ledger (SHA-256 Chained)</h3>
+            </div>
+            <button onclick="verifyLedgerIntegrity()" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-xs font-mono transition flex items-center space-x-1">
+              <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+              <span>Verify Hash Chain</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto max-h-[460px] overflow-y-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 bg-slate-950/80 sticky top-0 border-b border-slate-800 font-mono text-[10px]">
+                <tr>
+                  <th class="p-2">DECISION ID</th>
+                  <th class="p-2">Agent</th>
+                  <th class="p-2">Action</th>
+                  <th class="p-2">Policy Verdict</th>
+                  <th class="p-2">Impact</th>
+                  <th class="p-2">SHA-256 Signature</th>
+                </tr>
+              </thead>
+              <tbody id="ledger-table-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Red-Team Adversarial Attack Lab (5 Cols) -->
+        <div class="lg:col-span-5 bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="swords" class="w-4 h-4 text-rose-400"></i>
+              <h3 class="text-sm font-semibold text-white">Red-Team AI Safety Attack Suite</h3>
+            </div>
+            <button onclick="runRedTeamEvaluation()" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded text-xs font-mono transition">
+              Launch Attack Test
+            </button>
+          </div>
+
+          <div id="red-team-results-container" class="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+            <p class="text-xs text-slate-500 text-center py-10">Click "Launch Attack Test" to execute adversarial prompt injections, monetary limit bypasses, and data exfiltration payloads against the policy engine.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 8: AGENTIC COMMERCE SANDBOX ==================== -->
+    <section id="tab-commerce" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-base font-semibold text-white flex items-center space-x-2">
+              <i data-lucide="shopping-cart" class="w-4 h-4 text-brand-400"></i>
+              <span>Agentic Commerce & Autonomous Checkout Simulator</span>
+            </h3>
+            <p class="text-xs text-slate-400">Simulate autonomous AI Buyer Agent product discovery, price evaluation, delegated consent check, and tokenized payment.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Purchase Setup (4 Cols) -->
+          <div class="lg:col-span-4 bg-slate-950 p-5 rounded-lg border border-slate-800 space-y-4">
+            <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Configure Autonomous Buyer Agent</h4>
+
+            <div class="space-y-3 text-xs">
+              <div>
+                <label class="text-slate-400 block mb-1">Select Catalog Item:</label>
+                <select id="commerce-product-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:border-brand-500">
+                  <option value="prod_01">AI Cloud Compute Cluster (30 Days) — ₹18,500</option>
+                  <option value="prod_02">Enterprise Security Firewall License — ₹45,000</option>
+                  <option value="prod_03">Fast Delivery Grocery Cart (Organic) — ₹2,450</option>
+                  <option value="prod_04">Pro Gaming Ultra Pass (Annual) — ₹5,999</option>
+                  <option value="prod_05">Executive Business Flight (BLR -> DEL) — ₹12,800</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-slate-400 block mb-1">User Delegated Autonomous Spend Limit (₹):</label>
+                <input type="number" id="commerce-user-limit" value="25000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono focus:outline-none focus:border-brand-500">
+                <span class="text-[10px] text-slate-500 block mt-1">Purchases above limit will pause and require biometric user approval.</span>
+              </div>
+
+              <button onclick="executeAgenticPurchase()" class="w-full py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-brand-500/20 transition flex items-center justify-center space-x-2">
+                <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                <span>Launch Autonomous Purchase</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 7-Stage State Progression Stepper (8 Cols) -->
+          <div class="lg:col-span-8 bg-slate-950 p-5 rounded-lg border border-slate-800 space-y-4" id="commerce-stages-container">
+            <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">7-Stage Autonomous Checkout Flow</h4>
+            <div class="space-y-3" id="commerce-stepper-list">
+              <div class="p-8 text-center text-slate-500 text-xs">
+                Click "Launch Autonomous Purchase" to observe the AI Commerce agent execute product discovery, option ranking, risk checks, delegated mandate verification, and settlement ledger registration.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 9: RESEARCH EXPERIMENTS & MLOPS ==================== -->
+    <section id="tab-mlops" class="tab-content hidden space-y-6">
+      <!-- Drift Monitor Banner -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="activity" class="w-4 h-4 text-brand-400"></i>
+            <h3 class="text-sm font-semibold text-white">Statistical Drift Monitor (PSI & KS-Test)</h3>
+          </div>
+          <button onclick="loadDriftReport()" class="px-2.5 py-1 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded text-xs font-mono transition">
+            Refresh Drift Telemetry
+          </button>
+        </div>
+        <div id="drift-report-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- 7 Research Benchmark Experiments Cards -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="flask-conical" class="w-4 h-4 text-emerald-400"></i>
+            <h3 class="text-sm font-semibold text-white">Research Benchmark Suite (Experiments 1 – 7)</h3>
+          </div>
+          <span class="text-xs text-slate-400">Unified Payment Foundation vs. Siloed Baselines</span>
+        </div>
+        <div id="experiments-list-container" class="space-y-4">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
